@@ -22,6 +22,7 @@ public class CrashCourse : ModuleRules
 			"GameplayAbilities",
 			"GameplayTags",
 			"GameplayTasks",
+			"AnimGraphRuntime",
 			
 			
 		});
