@@ -19,6 +19,10 @@ public class CrashCourse : ModuleRules
 		PrivateDependencyModuleNames.AddRange(new string[]
 		{
 			"EnhancedInput",
+			"GameplayAbilities",
+			"GameplayTags",
+			"GameplayTasks",
+			
 			
 		});
 

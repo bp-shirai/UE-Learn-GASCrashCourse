@@ -8,6 +8,7 @@
 
 class USpringArmComponent;
 class UCameraComponent;
+class UAbilitySystemComponent;
 
 /**
  *
@@ -19,6 +20,10 @@ class CRASHCOURSE_API ACC_PlayerCharacter : public ACC_BaseCharacter
 
 public:
     ACC_PlayerCharacter();
+    virtual void PossessedBy(AController* NewController) override;
+    virtual void OnRep_PlayerState() override;
+
+    virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 private:
     UPROPERTY(VisibleAnywhere, Category = "Camera")

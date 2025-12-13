@@ -6,6 +6,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "AbilitySystemComponent.h"
+
+#include "Player/CC_PlayerState.h"
 
 ACC_PlayerCharacter::ACC_PlayerCharacter()
 {
@@ -34,4 +37,35 @@ ACC_PlayerCharacter::ACC_PlayerCharacter()
     FollowCamera = CreateDefaultSubobject<UCameraComponent>("FollowCamera");
     FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
     FollowCamera->bUsePawnControlRotation = false;
+}
+
+UAbilitySystemComponent* ACC_PlayerCharacter::GetAbilitySystemComponent() const
+{
+    const ACC_PlayerState* CCPlayerState = GetPlayerState<ACC_PlayerState>();
+    return IsValid(CCPlayerState) ? CCPlayerState->GetAbilitySystemComponent() : nullptr;
+}
+
+void ACC_PlayerCharacter::PossessedBy(AController* NewController)
+{
+    Super::PossessedBy(NewController);
+
+    if (!HasAuthority()) return;
+
+    UAbilitySystemComponent* ASC = GetAbilitySystemComponent();
+    if (IsValid(ASC))
+    {
+        ASC->InitAbilityActorInfo(GetPlayerState(), this);
+        GiveStartupAbilities();
+    }
+}
+
+void ACC_PlayerCharacter::OnRep_PlayerState()
+{
+    Super::OnRep_PlayerState();
+
+    UAbilitySystemComponent* ASC = GetAbilitySystemComponent();
+    if (IsValid(ASC))
+    {
+        ASC->InitAbilityActorInfo(GetPlayerState(), this);
+    }
 }
