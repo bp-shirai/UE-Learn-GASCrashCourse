@@ -6,6 +6,8 @@
 #include "Characters/CC_BaseCharacter.h"
 #include "CC_EnemyCharacter.generated.h"
 
+class UAbilitySystemComponent;
+
 /**
  * 
  */
@@ -22,5 +24,5 @@ public:
 private:
 
 	UPROPERTY(VisibleAnywhere)
-	UAbilitySystemComponent* AbilitySystemComponent;
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 };

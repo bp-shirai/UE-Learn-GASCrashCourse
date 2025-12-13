@@ -7,7 +7,7 @@
 #include "AbilitySystemInterface.h"
 #include "CC_PlayerState.generated.h"
 
-class UAbilitySystemComponent;
+
 
 /**
  *
