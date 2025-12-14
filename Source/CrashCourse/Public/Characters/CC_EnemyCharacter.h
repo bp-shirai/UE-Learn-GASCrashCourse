@@ -7,6 +7,8 @@
 #include "CC_EnemyCharacter.generated.h"
 
 class UAbilitySystemComponent;
+//class UCC_AttributeSet;
+class UAttributeSet;
 
 /**
  * 
@@ -19,10 +21,15 @@ class CRASHCOURSE_API ACC_EnemyCharacter : public ACC_BaseCharacter
 public:
 	ACC_EnemyCharacter();
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	virtual UAttributeSet* GetAttributeSet() const override;
+
 	virtual void BeginPlay() override;
 	
 private:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+
+	UPROPERTY()
+	TObjectPtr<UAttributeSet> AttributeSet;
 };

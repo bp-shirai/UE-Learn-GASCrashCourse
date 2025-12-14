@@ -5,6 +5,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "AbilitySystemComponent.h"
 #include "GameplayAbilitySpec.h"
+#include "GameplayEffectTypes.h"
 
 ACC_BaseCharacter::ACC_BaseCharacter()
 {
@@ -15,19 +16,25 @@ ACC_BaseCharacter::ACC_BaseCharacter()
     GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
 }
 
-UAbilitySystemComponent* ACC_BaseCharacter::GetAbilitySystemComponent() const
-{
-    return nullptr;
-}
+
 
 void ACC_BaseCharacter::GiveStartupAbilities()
 {
     UAbilitySystemComponent* ASC = GetAbilitySystemComponent();
-    if (!IsValid(ASC)) return;
 
     for (const auto& Ability : StartupAbilities)
     {
         FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Ability);
         ASC->GiveAbility(AbilitySpec);
     }
+}
+
+void ACC_BaseCharacter::InitializeAttributes()
+{
+    checkf(IsValid(InitializeAttributesEffect), TEXT("InitializeAttributesEffect not set."));
+    UAbilitySystemComponent* ASC = GetAbilitySystemComponent();
+
+    FGameplayEffectContextHandle EffectContext = ASC->MakeEffectContext();
+    FGameplayEffectSpecHandle SpecHandle       = ASC->MakeOutgoingSpec(InitializeAttributesEffect, 1, EffectContext);
+    ASC->BP_ApplyGameplayEffectSpecToSelf(SpecHandle);
 }

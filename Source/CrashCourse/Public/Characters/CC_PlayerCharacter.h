@@ -24,6 +24,8 @@ public:
     virtual void OnRep_PlayerState() override;
 
     virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+    virtual UAttributeSet* GetAttributeSet() const override;
+
 
 private:
     UPROPERTY(VisibleAnywhere, Category = "Camera")

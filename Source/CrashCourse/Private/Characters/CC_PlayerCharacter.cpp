@@ -9,6 +9,7 @@
 #include "AbilitySystemComponent.h"
 
 #include "Player/CC_PlayerState.h"
+#include "UObject/Object.h"
 
 ACC_PlayerCharacter::ACC_PlayerCharacter()
 {
@@ -45,17 +46,27 @@ UAbilitySystemComponent* ACC_PlayerCharacter::GetAbilitySystemComponent() const
     return IsValid(CCPlayerState) ? CCPlayerState->GetAbilitySystemComponent() : nullptr;
 }
 
+UAttributeSet* ACC_PlayerCharacter::GetAttributeSet() const
+{
+    const ACC_PlayerState* CCPlayerState = GetPlayerState<ACC_PlayerState>();
+    return IsValid(CCPlayerState) ? CCPlayerState->GetAttributeSet() : nullptr;
+}
+
 void ACC_PlayerCharacter::PossessedBy(AController* NewController)
 {
     Super::PossessedBy(NewController);
 
-    if (!HasAuthority()) return;
-
-    UAbilitySystemComponent* ASC = GetAbilitySystemComponent();
-    if (IsValid(ASC))
+    if (HasAuthority())
     {
-        ASC->InitAbilityActorInfo(GetPlayerState(), this);
-        GiveStartupAbilities();
+        UAbilitySystemComponent* ASC = GetAbilitySystemComponent();
+        if (IsValid(ASC))
+        {
+            ASC->InitAbilityActorInfo(GetPlayerState(), this);
+            GiveStartupAbilities();
+            InitializeAttributes();
+
+            OnAbilitySystemInitialized.Broadcast(ASC, GetAttributeSet());
+        }
     }
 }
 
@@ -67,5 +78,7 @@ void ACC_PlayerCharacter::OnRep_PlayerState()
     if (IsValid(ASC))
     {
         ASC->InitAbilityActorInfo(GetPlayerState(), this);
+
+        OnAbilitySystemInitialized.Broadcast(ASC, GetAttributeSet());
     }
 }
