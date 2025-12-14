@@ -7,11 +7,20 @@
 #include "CC_HitReact.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS(Abstract)
 class CRASHCOURSE_API UCC_HitReact : public UCC_GameplayAbility
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
+
+public:
+    UFUNCTION(BlueprintCallable, Category = "Crash|Abilities")
+    void CacheHitDirectionVectors(const AActor* Instigator);
+
+    UPROPERTY(BlueprintReadOnly, Category = "Crash|Abilities")
+    FVector AvatarForward;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Crash|Abilities")
+    FVector ToInstigator;
 };
