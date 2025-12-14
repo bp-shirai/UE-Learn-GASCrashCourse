@@ -39,6 +39,8 @@ void ACC_EnemyCharacter::BeginPlay()
         {
             GiveStartupAbilities();
             InitializeAttributes();
+
+            //ASC->GetGameplayAttributeValueChangeDelegate(UCC_AttributeSet::GetHealthAttribute()).AddUObject(this, &ThisClass::OnHealthChanged);
         }
 
         OnAbilitySystemInitialized.Broadcast(ASC, GetAttributeSet());

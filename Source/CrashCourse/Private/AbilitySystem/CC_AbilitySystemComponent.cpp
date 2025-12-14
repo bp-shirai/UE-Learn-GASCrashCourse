@@ -17,7 +17,6 @@ void UCC_AbilitySystemComponent::OnGiveAbility(FGameplayAbilitySpec& AbilitySpec
     Super::OnGiveAbility(AbilitySpec);
 
     HandleAutoActivateAbility(AbilitySpec);
-    
 }
 
 void UCC_AbilitySystemComponent::OnRep_ActivateAbilities()
@@ -33,12 +32,38 @@ void UCC_AbilitySystemComponent::OnRep_ActivateAbilities()
 
 void UCC_AbilitySystemComponent::HandleAutoActivateAbility(const FGameplayAbilitySpec& AbilitySpec)
 {
-   
+
     if (!IsValid(AbilitySpec.Ability)) return;
 
     if (AbilitySpec.Ability->GetAssetTags().HasTagExact(TAG::Ability::ActivateOnGiven))
     {
         TryActivateAbility(AbilitySpec.Handle);
     }
- 
+}
+
+void UCC_AbilitySystemComponent::SetAbilityLevel(TSubclassOf<UGameplayAbility> AbilityClass, int32 Level)
+{
+    if (!IsValid(GetAvatarActor())) return;
+    if (GetAvatarActor()->HasAuthority())
+    {
+        if (FGameplayAbilitySpec* AbilitySpec = FindAbilitySpecFromClass(AbilityClass))
+        {
+            AbilitySpec->Level = Level;
+            MarkAbilitySpecDirty(*AbilitySpec);
+        }
+    }
+}
+
+void UCC_AbilitySystemComponent::AddToAbilityLevel(TSubclassOf<UGameplayAbility> AbilityClass, int32 Level)
+{
+
+   if (!IsValid(GetAvatarActor())) return;
+    if (GetAvatarActor()->HasAuthority())
+    {
+        if (FGameplayAbilitySpec* AbilitySpec = FindAbilitySpecFromClass(AbilityClass))
+        {
+            AbilitySpec->Level += Level;
+            MarkAbilitySpecDirty(*AbilitySpec);
+        }
+    }
 }

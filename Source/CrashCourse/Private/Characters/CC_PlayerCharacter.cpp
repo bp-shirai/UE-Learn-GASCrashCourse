@@ -8,6 +8,7 @@
 #include "Components/CapsuleComponent.h"
 #include "AbilitySystemComponent.h"
 
+#include "AbilitySystem/CC_AttributeSet.h"
 #include "Player/CC_PlayerState.h"
 #include "UObject/Object.h"
 
@@ -78,6 +79,8 @@ void ACC_PlayerCharacter::OnRep_PlayerState()
     if (IsValid(ASC))
     {
         ASC->InitAbilityActorInfo(GetPlayerState(), this);
+
+        ASC->GetGameplayAttributeValueChangeDelegate(UCC_AttributeSet::GetHealthAttribute()).AddUObject(this, &ThisClass::OnHealthChanged);
 
         OnAbilitySystemInitialized.Broadcast(ASC, GetAttributeSet());
     }

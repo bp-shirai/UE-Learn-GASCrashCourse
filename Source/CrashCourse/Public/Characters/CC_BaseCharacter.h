@@ -10,8 +10,10 @@
 class UGameplayAbility;
 class UGameplayEffect;
 class UAttributeSet;
+struct FOnAttributeChangeData;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FAbilitySystemInitialized, UAbilitySystemComponent*, ASC,  UAttributeSet*, AS);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FAbilitySystemInitialized, UAbilitySystemComponent*, ASC, UAttributeSet*, AS);
 
 UCLASS(Abstract)
 class CRASHCOURSE_API ACC_BaseCharacter : public ACharacter, public IAbilitySystemInterface
@@ -21,15 +23,26 @@ class CRASHCOURSE_API ACC_BaseCharacter : public ACharacter, public IAbilitySyst
 public:
     ACC_BaseCharacter();
 
+    virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
     virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override { return nullptr; }
     virtual UAttributeSet* GetAttributeSet() const { return nullptr; }
+
+    bool IsAlive() const { return bAlive; }
+    void SetAlive(bool Alive) { bAlive = Alive; }
 
     UPROPERTY(BlueprintAssignable)
     FAbilitySystemInitialized OnAbilitySystemInitialized;
 
+    UFUNCTION(BlueprintCallable, Category = "Crash|Death")
+    virtual void HandleRespawn();
+
 protected:
     void GiveStartupAbilities();
     void InitializeAttributes();
+
+    void OnHealthChanged(const FOnAttributeChangeData& Data);
+    virtual void HandleDeath();
 
 
 private:
@@ -38,4 +51,7 @@ private:
 
     UPROPERTY(EditDefaultsOnly, Category = "Crash|Abilities")
     TSubclassOf<UGameplayEffect> InitializeAttributesEffect;
+
+    UPROPERTY(BlueprintReadOnly, Replicated, meta = (AllowPrivateAccess = "true"), Category = "Crash|Attributes")
+    bool bAlive{true};
 };
