@@ -12,6 +12,8 @@
 #include "Logging/LogVerbosity.h"
 
 #include "AbilitySystem/CC_AttributeSet.h"
+#include "PipelineStateCache.h"
+#include "UObject/UObjectBaseUtility.h"
 
 ACC_BaseCharacter::ACC_BaseCharacter()
 {
@@ -29,7 +31,6 @@ void ACC_BaseCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
     DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, bAlive, COND_None, REPNOTIFY_Always);
 }
 
-
 void ACC_BaseCharacter::GiveStartupAbilities()
 {
     UAbilitySystemComponent* ASC = GetAbilitySystemComponent();
@@ -43,14 +44,18 @@ void ACC_BaseCharacter::GiveStartupAbilities()
 
 void ACC_BaseCharacter::InitializeAttributes()
 {
-    checkf(IsValid(InitializeAttributesEffect), TEXT("InitializeAttributesEffect not set."));
-    UAbilitySystemComponent* ASC = GetAbilitySystemComponent();
+    // checkf(IsValid(InitializeAttributesEffect), TEXT("InitializeAttributesEffect not set."));
+    // UAbilitySystemComponent* ASC = GetAbilitySystemComponent();
 
-    FGameplayEffectContextHandle EffectContext = ASC->MakeEffectContext();
-    FGameplayEffectSpecHandle SpecHandle       = ASC->MakeOutgoingSpec(InitializeAttributesEffect, 1, EffectContext);
-    ASC->BP_ApplyGameplayEffectSpecToSelf(SpecHandle);
+    // FGameplayEffectContextHandle EffectContext = ASC->MakeEffectContext();
+    // FGameplayEffectSpecHandle SpecHandle       = ASC->MakeOutgoingSpec(InitializeAttributesEffect, 1, EffectContext);
+    // ASC->BP_ApplyGameplayEffectSpecToSelf(SpecHandle);
+    ApplyGameplayEffectToSelf(InitializeAttributesEffect);
 
-    ASC->GetGameplayAttributeValueChangeDelegate(UCC_AttributeSet::GetHealthAttribute()).AddUObject(this, &ThisClass::OnHealthChanged);
+    if (UAbilitySystemComponent* ASC = GetAbilitySystemComponent())
+    {
+        ASC->GetGameplayAttributeValueChangeDelegate(UCC_AttributeSet::GetHealthAttribute()).AddUObject(this, &ThisClass::OnHealthChanged);
+    }
 }
 
 void ACC_BaseCharacter::OnHealthChanged(const FOnAttributeChangeData& Data)
@@ -76,3 +81,18 @@ void ACC_BaseCharacter::HandleRespawn()
     UE_LOG(LogTemp, Warning, TEXT("ACC_BaseCharacter::HandleRespawn : %s"), *GetName());
 }
 
+void ACC_BaseCharacter::ResetAttributes()
+{
+    ApplyGameplayEffectToSelf(ResetAttributesEffect);
+}
+
+void ACC_BaseCharacter::ApplyGameplayEffectToSelf(TSubclassOf<UGameplayEffect> ApplyEffect, int32 Level)
+{
+    checkf(IsValid(ApplyEffect), TEXT("%s::ApplyGameplayEffectToSelf(%s) not set."), *GetName(), *GetNameSafe(ApplyEffect));
+    if (UAbilitySystemComponent* ASC = GetAbilitySystemComponent())
+    {
+        FGameplayEffectContextHandle EffectContext = ASC->MakeEffectContext();
+        FGameplayEffectSpecHandle SpecHandle       = ASC->MakeOutgoingSpec(ApplyEffect, Level, EffectContext);
+        ASC->BP_ApplyGameplayEffectSpecToSelf(SpecHandle);
+    }
+}

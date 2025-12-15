@@ -12,7 +12,6 @@ class UGameplayEffect;
 class UAttributeSet;
 struct FOnAttributeChangeData;
 
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FAbilitySystemInitialized, UAbilitySystemComponent*, ASC, UAttributeSet*, AS);
 
 UCLASS(Abstract)
@@ -37,13 +36,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Crash|Death")
     virtual void HandleRespawn();
 
+    void ResetAttributes();
+
 protected:
     void GiveStartupAbilities();
     void InitializeAttributes();
 
     void OnHealthChanged(const FOnAttributeChangeData& Data);
     virtual void HandleDeath();
-
 
 private:
     UPROPERTY(EditDefaultsOnly, Category = "Crash|Abilities")
@@ -52,6 +52,11 @@ private:
     UPROPERTY(EditDefaultsOnly, Category = "Crash|Abilities")
     TSubclassOf<UGameplayEffect> InitializeAttributesEffect;
 
+    UPROPERTY(EditDefaultsOnly, Category = "Crash|Abilities")
+    TSubclassOf<UGameplayEffect> ResetAttributesEffect;
+
     UPROPERTY(BlueprintReadOnly, Replicated, meta = (AllowPrivateAccess = "true"), Category = "Crash|Attributes")
     bool bAlive{true};
+
+    void ApplyGameplayEffectToSelf(TSubclassOf<UGameplayEffect> ApplyEffect, int32 Level = 1);
 };

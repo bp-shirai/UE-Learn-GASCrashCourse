@@ -15,9 +15,18 @@ namespace TAG
 
     namespace Event
     {
+        UE_DEFINE_GAMEPLAY_TAG(KillScored, "Event.KillScored");
+
         namespace Enemy
         {
-            UE_DEFINE_GAMEPLAY_TAG(HitReact, "Event.Enemy.HitRect")
+            UE_DEFINE_GAMEPLAY_TAG(HitReact, "Event.Enemy.HitRect");
         }
     } // namespace Event
+
+    namespace Status
+    {
+        UE_DEFINE_GAMEPLAY_TAG(Dead, "Status.Dead");
+        UE_DEFINE_GAMEPLAY_TAG(Stunned, "Status.Stunned");
+        UE_DEFINE_GAMEPLAY_TAG(Invulnerable, "Status.Invulnerable");
+    } // namespace Status
 } // namespace TAG

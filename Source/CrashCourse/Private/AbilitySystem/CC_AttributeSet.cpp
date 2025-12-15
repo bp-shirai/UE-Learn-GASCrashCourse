@@ -2,9 +2,13 @@
 
 #include "AbilitySystem/CC_AttributeSet.h"
 
+#include "Abilities/GameplayAbilityTypes.h"
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "GameplayEffectExtension.h"
+
+#include "GameplayTags/CCTags.h"
 
 UCC_AttributeSet::UCC_AttributeSet()
 {
@@ -13,6 +17,18 @@ UCC_AttributeSet::UCC_AttributeSet()
 void UCC_AttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
     Super::PostGameplayEffectExecute(Data);
+
+    if (Data.EvaluatedData.Attribute == GetHealthAttribute())
+    {
+        if (GetHealth() <= 0.f)
+        {
+            // Send a gameplay event to the causer of this effect.
+            FGameplayEventData EventData;
+            EventData.Instigator = Data.Target.GetAvatarActor();
+
+            UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Data.EffectSpec.GetEffectContext().GetInstigator(), TAG::Event::KillScored, EventData);
+        }
+    }
 
     if (!bAttributeInitialized)
     {
@@ -38,7 +54,7 @@ void UCC_AttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
     DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, Mana, COND_None, REPNOTIFY_Always);
     DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MaxMana, COND_None, REPNOTIFY_Always);
 
-    DOREPLIFETIME(ThisClass, bAttributeInitialized);
+    DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, bAttributeInitialized, COND_None, REPNOTIFY_Always);
 }
 
 void UCC_AttributeSet::OnRep_Health(const FGameplayAttributeData& OldValue)
