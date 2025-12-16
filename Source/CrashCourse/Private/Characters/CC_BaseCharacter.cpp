@@ -5,6 +5,7 @@
 #include "Net/UnrealNetwork.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "AbilitySystemComponent.h"
 #include "Engine/EngineTypes.h"
 #include "GameplayAbilitySpec.h"
@@ -22,6 +23,9 @@ ACC_BaseCharacter::ACC_BaseCharacter()
 
     // Tick and refresh bone transforms whether rendered or not - for bone updates on a dedicated server
     GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
+    GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+    GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }
 
 void ACC_BaseCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -64,13 +68,19 @@ void ACC_BaseCharacter::OnHealthChanged(const FOnAttributeChangeData& Data)
     {
         HandleDeath();
     }
+
+    if (Data.OldValue <= 0.f && Data.NewValue > 0.f)
+    {
+        HandleRespawn();
+    }
 }
 
 void ACC_BaseCharacter::HandleDeath()
 {
     SetAlive(false);
 
-    UE_LOG(LogTemp, Warning, TEXT("ACC_BaseCharacter::HandleDeath : %s"), *GetName());
+    // UE_LOG(LogTemp, Warning, TEXT("ACC_BaseCharacter::HandleDeath : %s"), *GetName());
+    GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
     GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
@@ -78,7 +88,9 @@ void ACC_BaseCharacter::HandleRespawn()
 {
     SetAlive(true);
 
-    UE_LOG(LogTemp, Warning, TEXT("ACC_BaseCharacter::HandleRespawn : %s"), *GetName());
+    // UE_LOG(LogTemp, Warning, TEXT("ACC_BaseCharacter::HandleRespawn : %s"), *GetName());
+    GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+    GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }
 
 void ACC_BaseCharacter::ResetAttributes()

@@ -5,6 +5,7 @@
 #include "AbilitySystem/CC_AbilitySystemComponent.h"
 #include "AbilitySystem/CC_AttributeSet.h"
 #include "Characters/CC_BaseCharacter.h"
+#include "Components/WidgetComponent.h"
 #include "GameplayEffectTypes.h"
 #include "Blueprint/WidgetTree.h"
 
@@ -12,6 +13,7 @@
 
 UCC_WidgetComponent::UCC_WidgetComponent()
 {
+    SetWidgetSpace(EWidgetSpace::Screen);
 }
 
 void UCC_WidgetComponent::BeginPlay()

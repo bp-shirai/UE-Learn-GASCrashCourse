@@ -6,6 +6,10 @@
 #include "Abilities/GameplayAbility.h"
 #include "CC_GameplayAbility.generated.h"
 
+class UCC_AbilitySystemComponent;
+class ACC_BaseCharacter;
+class ACC_EnemyCharacter;
+
 /**
  *
  */
@@ -19,4 +23,13 @@ public:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Crash|Debug")
     bool bDrawDebug{false};
+
+    UFUNCTION(BlueprintPure, Category = "Crash|Abilities")
+    UCC_AbilitySystemComponent* GetCCAbilitySystemComponent() const;
+
+    UFUNCTION(BlueprintPure, Category = "Crash|Abilities")
+    ACC_BaseCharacter* GetCCBaseCharacter() const;
+
+    UFUNCTION(BlueprintPure, Category = "Crash|Abilities")
+    ACC_EnemyCharacter* GetCCEnemyCharacter() const;
 };

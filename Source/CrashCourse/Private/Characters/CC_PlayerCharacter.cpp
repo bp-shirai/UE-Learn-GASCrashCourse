@@ -10,7 +10,8 @@
 
 #include "AbilitySystem/CC_AttributeSet.h"
 #include "Player/CC_PlayerState.h"
-#include "UObject/Object.h"
+
+#include "GameFramework/PlayerController.h"
 
 ACC_PlayerCharacter::ACC_PlayerCharacter()
 {
@@ -83,5 +84,20 @@ void ACC_PlayerCharacter::OnRep_PlayerState()
         ASC->GetGameplayAttributeValueChangeDelegate(UCC_AttributeSet::GetHealthAttribute()).AddUObject(this, &ThisClass::OnHealthChanged);
 
         OnAbilitySystemInitialized.Broadcast(ASC, GetAttributeSet());
+    }
+}
+
+void ACC_PlayerCharacter::SetInputEnableFromPlayerController(bool bEnable)
+{
+    if (APlayerController* PC = GetController<APlayerController>())
+    {
+        if (bEnable)
+        {
+            EnableInput(PC);
+        }
+        else
+        {
+            DisableInput(PC);
+        }
     }
 }

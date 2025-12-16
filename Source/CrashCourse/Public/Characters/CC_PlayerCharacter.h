@@ -26,6 +26,8 @@ public:
     virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
     virtual UAttributeSet* GetAttributeSet() const override;
 
+    UFUNCTION(BlueprintCallable, Category = "Crash|Player")
+    void SetInputEnableFromPlayerController(bool bEnable);
 
 private:
     UPROPERTY(VisibleAnywhere, Category = "Camera")

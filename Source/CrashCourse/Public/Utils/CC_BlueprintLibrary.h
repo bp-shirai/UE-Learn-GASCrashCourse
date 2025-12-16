@@ -8,6 +8,8 @@
 #include "Utils/CC_GameTypes.h"
 #include "CC_BlueprintLibrary.generated.h"
 
+class UAbilitySystemComponent;
+class ACharacter;
 /**
  *
  */
@@ -21,4 +23,13 @@ public:
 
     UFUNCTION(BlueprintPure, Category = "Crash|Utils")
     static FName GetHitDirectionName(const EHitDirection& HitDirection);
+
+    UFUNCTION(BlueprintCallable, Category = "Crash|Utils")
+    static bool ApplyGameplayTagInNone(UAbilitySystemComponent* TargetASC, const FGameplayTag& Tag);
+
+    UFUNCTION(BlueprintCallable, Category = "Crash|Utils")
+    static bool RemoveGameplayTagInFound(UAbilitySystemComponent* TargetASC, const FGameplayTag& Tag);
+
+    UFUNCTION(BlueprintCallable, Category = "Crash|Utils")
+    static void SetRagdollEnable(bool bEnable, ACharacter* Character);
 };

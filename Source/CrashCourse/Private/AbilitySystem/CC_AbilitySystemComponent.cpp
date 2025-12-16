@@ -32,7 +32,6 @@ void UCC_AbilitySystemComponent::OnRep_ActivateAbilities()
 
 void UCC_AbilitySystemComponent::HandleAutoActivateAbility(const FGameplayAbilitySpec& AbilitySpec)
 {
-
     if (!IsValid(AbilitySpec.Ability)) return;
 
     if (AbilitySpec.Ability->GetAssetTags().HasTagExact(TAG::Ability::ActivateOnGiven))
@@ -56,7 +55,6 @@ void UCC_AbilitySystemComponent::SetAbilityLevel(TSubclassOf<UGameplayAbility> A
 
 void UCC_AbilitySystemComponent::AddToAbilityLevel(TSubclassOf<UGameplayAbility> AbilityClass, int32 Level)
 {
-
    if (!IsValid(GetAvatarActor())) return;
     if (GetAvatarActor()->HasAuthority())
     {

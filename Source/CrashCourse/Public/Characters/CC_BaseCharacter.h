@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
+#include "Framework/ActorPoolingInterface.h"
 #include "CC_BaseCharacter.generated.h"
 
 class UGameplayAbility;
@@ -15,7 +16,7 @@ struct FOnAttributeChangeData;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FAbilitySystemInitialized, UAbilitySystemComponent*, ASC, UAttributeSet*, AS);
 
 UCLASS(Abstract)
-class CRASHCOURSE_API ACC_BaseCharacter : public ACharacter, public IAbilitySystemInterface
+class CRASHCOURSE_API ACC_BaseCharacter : public ACharacter, public IAbilitySystemInterface, public IActorPoolingInterface
 {
     GENERATED_BODY()
 
@@ -36,6 +37,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Crash|Death")
     virtual void HandleRespawn();
 
+    UFUNCTION(BlueprintCallable, Category = "Crash|Abilities")
     void ResetAttributes();
 
 protected:

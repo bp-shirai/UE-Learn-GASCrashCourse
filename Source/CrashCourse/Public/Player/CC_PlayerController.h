@@ -19,6 +19,7 @@ class CRASHCOURSE_API ACC_PlayerController : public APlayerController
 {
     GENERATED_BODY()
 
+public:
 protected:
     virtual void SetupInputComponent() override;
 
