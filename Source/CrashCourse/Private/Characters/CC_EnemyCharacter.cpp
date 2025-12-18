@@ -2,8 +2,10 @@
 
 #include "Characters/CC_EnemyCharacter.h"
 
+#include "AIController.h"
 #include "AbilitySystem/CC_AbilitySystemComponent.h"
 #include "AbilitySystem/CC_AttributeSet.h"
+#include "Runtime/AIModule/Classes/AIController.h"
 
 ACC_EnemyCharacter::ACC_EnemyCharacter()
 {
@@ -46,5 +48,16 @@ void ACC_EnemyCharacter::BeginPlay()
         }
 
         OnAbilitySystemInitialized.Broadcast(ASC, GetAttributeSet());
+    }
+}
+
+void ACC_EnemyCharacter::HandleDeath()
+{
+    Super::HandleDeath();
+
+    AAIController* AIC = GetController<AAIController>();
+    if (IsValid(AIC))
+    {
+        AIC->StopMovement();
     }
 }

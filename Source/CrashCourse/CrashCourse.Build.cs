@@ -23,7 +23,8 @@ public class CrashCourse : ModuleRules
 			"GameplayTags",
 			"GameplayTasks",
 			"AnimGraphRuntime",
-			"UMG"
+			"UMG",
+			"AIModule"
 			
 			
 		});

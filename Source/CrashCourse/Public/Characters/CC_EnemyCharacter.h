@@ -25,6 +25,10 @@ public:
 
     virtual void BeginPlay() override;
 
+	virtual void HandleDeath() override;
+
+
+
 #pragma region--------------------- Enemy AI ---------------------------------------
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Crash|AI")
 	float AcceptanceRadius{500.f};
