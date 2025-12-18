@@ -16,6 +16,12 @@
 #include "PipelineStateCache.h"
 #include "UObject/UObjectBaseUtility.h"
 
+namespace CrashTags
+{
+    const FName Player = FName("Player");
+    const FName Enemy  = FName("Enemy");
+} // namespace CrashTags
+
 ACC_BaseCharacter::ACC_BaseCharacter()
 {
 

@@ -32,4 +32,7 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "Crash|Utils")
     static void SetRagdollEnable(bool bEnable, ACharacter* Character);
+
+    UFUNCTION(BlueprintCallable, Category = "Crash|Utils", meta = (WorldContext = "WorldContextObject"))
+    static FClosestActorWithTagResult FindClosestActorWithTag(const UObject* WorldContextObject, const FVector& Origin, const FName& Tag);
 };

@@ -12,3 +12,15 @@ enum class EHitDirection : uint8
     Forward,
     Back,
 };
+
+USTRUCT(BlueprintType)
+struct FClosestActorWithTagResult
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite)
+    TWeakObjectPtr<AActor> Actor;
+
+    UPROPERTY(BlueprintReadWrite)
+    float Distance{0.f};
+};

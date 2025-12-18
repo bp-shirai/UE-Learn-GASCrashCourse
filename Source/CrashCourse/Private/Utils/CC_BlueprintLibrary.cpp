@@ -2,8 +2,10 @@
 
 #include "Utils/CC_BlueprintLibrary.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "GameFramework/Actor.h"
 #include "Logging/LogVerbosity.h"
 #include "Serialization/MemoryLayout.h"
+#include "UObject/Object.h"
 #include "Utils/CC_GameTypes.h"
 
 #include "AbilitySystemComponent.h"
@@ -13,6 +15,9 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
+
+#include "Characters/CC_BaseCharacter.h"
 
 EHitDirection UCC_BlueprintLibrary::GetHitDirection(const FVector& TargetForward, const FVector& ToInstigator)
 {
@@ -101,7 +106,34 @@ void UCC_BlueprintLibrary::SetRagdollEnable(bool bEnable, ACharacter* Character)
         {
             const FTransform MeshRelativeTransform = CDO->GetMesh()->GetRelativeTransform();
             MeshComponent->SetRelativeTransform(MeshRelativeTransform);
-            
         }
     }
+}
+
+FClosestActorWithTagResult UCC_BlueprintLibrary::FindClosestActorWithTag(const UObject* WorldContextObject, const FVector& Origin, const FName& Tag)
+{
+    TArray<AActor*> OutActors;
+    UGameplayStatics::GetAllActorsOfClassWithTag(WorldContextObject, ACC_BaseCharacter::StaticClass(), Tag, OutActors);
+
+    float ClosestDistance = FLT_MAX;
+    AActor* ClosestActor  = nullptr;
+    
+    for (AActor* Actor : OutActors)
+    {
+        const ACC_BaseCharacter* Character = Cast<ACC_BaseCharacter>(Actor);
+        if (!IsValid(Character) || !Character->IsAlive()) continue;
+
+        const float Distance = FVector::Dist(Origin, Actor->GetActorLocation());
+        if (Distance < ClosestDistance)
+        {
+            ClosestDistance = Distance;
+            ClosestActor    = Actor;
+        }
+    }
+
+    FClosestActorWithTagResult Result;
+    Result.Actor    = ClosestActor;
+    Result.Distance = ClosestDistance;
+
+    return Result;
 }

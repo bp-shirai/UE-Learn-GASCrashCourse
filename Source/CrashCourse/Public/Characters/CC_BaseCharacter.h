@@ -8,6 +8,12 @@
 #include "Framework/ActorPoolingInterface.h"
 #include "CC_BaseCharacter.generated.h"
 
+namespace CrashTags
+{
+    extern const FName Player;
+    extern const FName Enemy;
+} // namespace CrashTags
+
 class UGameplayAbility;
 class UGameplayEffect;
 class UAttributeSet;

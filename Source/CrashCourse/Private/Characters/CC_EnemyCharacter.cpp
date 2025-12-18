@@ -14,6 +14,8 @@ ACC_EnemyCharacter::ACC_EnemyCharacter()
     AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
     AttributeSet = CreateDefaultSubobject<UCC_AttributeSet>("AttributeSet");
+
+    Tags.Add(CrashTags::Enemy);
 }
 
 UAbilitySystemComponent* ACC_EnemyCharacter::GetAbilitySystemComponent() const

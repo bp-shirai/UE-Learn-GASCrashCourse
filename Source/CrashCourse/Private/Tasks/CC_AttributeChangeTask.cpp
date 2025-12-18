@@ -2,7 +2,7 @@
 
 #include "Tasks/CC_AttributeChangeTask.h"
 #include "AbilitySystemComponent.h"
-#include "UObject/Object.h"
+#include "GameplayEffectExtension.h"
 
 UCC_AttributeChangeTask* UCC_AttributeChangeTask::ListenForAttributeChange(UAbilitySystemComponent* AbilitySystemComponent, FGameplayAttribute Attribute)
 {
@@ -34,5 +34,8 @@ void UCC_AttributeChangeTask::EndTask()
 
 void UCC_AttributeChangeTask::AttributeChanged(const FOnAttributeChangeData& Data)
 {
+    // Data.GEModData->EffectSpec.GetEffectContext().GetInstigator();
+
+    // GetEffectContext().GetInstigator()
     OnAttributeChanged.Broadcast(Data.Attribute, Data.NewValue, Data.OldValue);
 }
